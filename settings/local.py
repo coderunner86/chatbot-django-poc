@@ -31,6 +31,7 @@ DJANGO_APPS  = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 ]
 
 
@@ -39,3 +40,4 @@ THIRD_PARTY_APPS = []
 LOCAL_APPS = []
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+CORS_ALLOW_ALL_ORIGINS = True
