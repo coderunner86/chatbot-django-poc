@@ -5,6 +5,17 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
+#scrape_info
+import requests
+from bs4 import BeautifulSoup
+
+def scrape_info(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    textos = [p.get_text().strip() for p in soup.find_all('p')]
+    info = ' '.join(textos)
+    return info
+
 def index(request):
     return HttpResponse("Hello, Django!")
 
@@ -13,10 +24,9 @@ lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
 url_mapping = {
-    'facturacion': 'https://www.factcil.com/facturacion',
-    'seguridad_social': 'https://www.factcil.com/seguridad-social',
-    'pagos': 'https://www.factcil.com/pagos',
-    # Agrega más mapeos según sea necesario
+    'explain': 'https://www.factcil.com/how-it-works',
+    'pricing': 'https://www.factcil.com/pricing',
+    'home': 'https://www.factcil.com/',
 }
 
 @api_view(['POST'])
@@ -37,10 +47,9 @@ def chatbot(request):
     # Utiliza un enfoque de tipo switch para determinar la respuesta
     for word in words:
         if word in url_mapping:
-            response = f"Para más información sobre {word}, visita: {url_mapping[word]}"
+            info = scrape_info(url_mapping[word])
+            response = f"{info}. Para más información sobre {word}, visita: {url_mapping[word]}"
             break
 
     return Response({'message': response})
 
-    # return the chatbot's response in a JSON format
-    return Response({'message': response})
